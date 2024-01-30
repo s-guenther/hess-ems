@@ -1,4 +1,30 @@
 #!/usr/bin/env python3
+"""
+Deadzone EMS Module
+
+This module implements a Deadzone Energy Management System (EMS) for hybrid
+energy storage systems. It offers various operational modes for peak and base
+power management with adjustable parameters for system optimization.
+
+
+Main method/EMS implementation:
+
+deadzone(power_in, energy_peak, para=None)
+    Implements a versatile Deadzone EMS supporting multiple operational modes,
+    including peak/base prioritization and feedback control. It intelligently
+    splits input power and adjusts it based on the provided or parameters.
+
+Details on the parameterization of this EMS can be found in the variables
+    `STD_PARA` and
+    `STD_PARA_DESCRIPTIONS`.
+
+Internal functions:
+    _deadzone
+    _saturation
+    _reserve
+    _feedback
+    _sat_deadzone
+"""
 
 import numpy as np
 
@@ -48,18 +74,32 @@ STD_PARA_DESCRIPTIONS = {
 
 def deadzone(power_in, energy_peak, para=None):
     """
-    Deadzone EMS implementation. The deadzone EMS is formulated in a way
-    that depending on the chosen parameters it allows peak-prioritized
-    deadzone ems, base-priortized deadzone ems, or
-    base-discharge-prio-peak_charge_prio deadzone ems. It allows for
-    proportional soc feedback, on/off feedback, no feedback. Further,
-    the feedback reference may be defined as a constant value or as a window.
-    The `power_in` is split into a base power and a peak power. How this
-    dispatch is performed depends on the chosen para defined in `para`.
-    For a list of para, see `STD_PARA`, for a description on these,
-    see `STD_PARA_DESCRIPTIONS`. A `para` dict may be a subset of the paras
-    defined in `STD_PARA`. Missing keys and values are automatically filled
-    with the ones in `STD_PARA`.
+    Deadzone Energy Management System (EMS).
+
+    Depending on chosen parameterization, this Deadzone EMS offers various 
+    operational modes including peak-prioritized, base-prioritized, and a
+    combination of base-discharge-priority and peak-charge-priority. It
+    supports proportional SoC feedback, on/off feedback, or no feedback, with
+    a feedback reference defined as either a constant value or a window. The
+    `power_in` is split into base and peak powers, with the dispatch method
+    determined by the provided `para` dictionary. If `para` is not provided or
+    incomplete, defaults from `STD_PARA` are used. Information on these 
+    standard parameters can be found in `STD_PARA_DESCRIPTIONS`.
+
+    Parameters
+    ----------
+    power_in : scalar or arraylike (numpy)
+        Input power to be managed by the EMS.
+    energy_peak : scalar or arraylike (numpy)
+        Peak energy input for feedback calculation.
+    para : dict, optional
+        Parameters for EMS operation. Defaults are filled from `STD_PARA`.
+        A description of the possible keys can be found in 
+        `STD_PARA_DESCRIPTIONS`.
+    Returns
+    -------
+    tuple
+        A tuple containing the adjusted base and peak power values.
     """
     # Load missing std para
     para = update_std(para, STD_PARA)
@@ -92,11 +132,26 @@ def deadzone(power_in, energy_peak, para=None):
 
 def _sat_deadzone(val_in, para):
     """
-    Saturated deadzone function: The `val_in` is piped into a classic
-    deadzone function and then into a classic saturation function
-    Para dict contains:
-    ['slope_pos', 'slope_neg', 'out_max', 'out_min',
-    'threshold_pos', 'threshold_neg']
+    Apply a saturated deadzone operation to an input value.
+
+    This function processes the input `val_in` through a deadzone function
+    followed by a saturation function. The deadzone function filters the
+    input within a specified threshold range, and the saturation function
+    limits the output to defined maximum and minimum values.
+
+    Parameters
+    ----------
+    val_in : scalar or arraylike (numpy)
+        Input value to be processed.
+    para : dict
+        A dictionary containing parameters for the saturated deadzone
+        operation. Includes 'slope_pos', 'slope_neg', 'out_max', 'out_min',
+        'threshold_pos', and 'threshold_neg'.
+
+    Returns
+    -------
+    ndarray
+        The processed value after applying saturated deadzone operation.
     """
     # Extract paras from dict
     dz_para = subdict(para, ['slope_pos', 'slope_neg',
@@ -110,13 +165,26 @@ def _sat_deadzone(val_in, para):
 
 def _feedback(val_in, para):
     """
-    Computes soc feedback based on the current soc `val_in` and the gain and
-    reference window stored in `para`. The implementation is a proportional
-    feedback where the feedback output val linearily rises with the
-    deviation from the set point. The set point is not a constant,
-    but a window with an upper and a lower value. If `val_in` is within this
-    window, the output will be zero.
-    Para dict contains ['gain', 'window_up', 'window_low']
+    Compute state of charge (SoC) feedback.
+
+    This function calculates the SoC feedback based on the current state of
+    charge (`val_in`), and parameters 'gain', 'window_up', and 'window_low'
+    in `para`. It implements a proportional feedback where the output
+    linearly varies with the deviation from a reference window. If `val_in`
+    is within this window, the output is zero.
+
+    Parameters
+    ----------
+    val_in : scalar or arraylike (numpy)
+        The current state of charge value.
+    para : dict
+        Parameter dictionary containing 'gain', 'window_up', and 'window_low'.
+
+    Returns
+    -------
+    scalar or ndarray
+        The feedback value, based on the state of charge deviation from the
+        reference window.
     """
     k = para['gain']
     up = para['window_up']
@@ -130,11 +198,28 @@ def _feedback(val_in, para):
 
 def _reserve(base_in, peak_in, para):
     """
-    Based on input base and peak storage power `base_in` and `peak_in` and
-    given bounds for these storages defined in `para`, the function
-    calculates an upper and lower bounds of how much an soc feedback signal
-    may alter the input powers
-    Para dict contains ['base_max', 'base_min', 'peak_max', 'peak_min']
+    Calculate upper and lower bounds for power adjustments.
+
+    This function computes the permissible range for adjusting the base and
+    peak storage powers (`base_in` and `peak_in`). It ensures these
+    adjustments stay within specified bounds defined in the `para` dictionary.
+
+    Parameters
+    ----------
+    base_in : scalar or arraylike (numpy)
+        Base storage power input.
+    peak_in : scalar or arraylike (numpy)
+        Peak storage power input.
+    para : dict
+        Parameter dictionary containing 'base_max', 'base_min', 'peak_max',
+        and 'peak_min', which define the operational limits for base and peak
+        storages.
+
+    Returns
+    -------
+    tuple
+        A tuple containing the lower and upper bounds for the state of charge
+        (SoC) feedback signal's impact on the input powers.
     """
     base_max = para['base_max']
     base_min = para['base_min']
@@ -148,10 +233,26 @@ def _reserve(base_in, peak_in, para):
 
 def _saturation(s_in, para):
     """
-    Classic saturation function. If the input value `s_in` falls below a
-    limit or exceeds a limit, the limit is returned, else, the input value
-    is returned.
-    Para dict contains: ['sat_low', 'sat_high']
+    Classic saturation function.
+
+    This function applies a saturation operation to a signal. Values that
+    exceed specified upper and lower limits are capped at these limits, while
+    values within the limits remain unchanged.
+
+    Parameters
+    ----------
+    s_in : scalar or arraylike (numpy)
+        Input values to be processed by the saturation function.
+    para : dict
+        Parameter dictionary containing the following keys:
+        'sat_low' and 'sat_high', defining the lower and upper saturation
+        limits.
+
+    Returns
+    -------
+    ndarray
+        The processed signal after applying the saturation operation, with
+        values exceeding the limits capped at 'sat_high' or 'sat_low'.
     """
     pos = para['sat_low']
     neg = para['sat_high']
@@ -164,11 +265,27 @@ def _saturation(s_in, para):
 
 def _deadzone(d_in, para):
     """
-    Classic deadzone function. If the input `d_in` is within an upper or
-    lower threshold value, the output is zero. Above and below this value,
-    the output rises and falls linearily to the difference of the limt.
-    Para dict contains:
-    ['slope_pos', 'slope_neg', 'threshold_pos', 'threshold_neg']
+    Classic deadzone function.
+
+    This function applies a deadzone operation to a signal. Values within a
+    specified range, defined by by an upper and lower threshold are set to
+    zero. Values above the threshold linearily rise and fall with a
+    specified slope.
+
+    Parameters
+    ----------
+    d_in : scalar or arraylike (numpy)
+        Input values that are processed by the deadzone function
+    para : dict
+        Parameter dict with the following keys:
+        slope_pos slope_neg threshold_pos threshold_neg
+
+    Returns
+    -------
+    ndarray
+        The signal after applying the deadzone operation, with values in
+        the specified threshold range set to zero, and values above shifted by
+        the threshold range.
     """
     mp = para['slope_neg']
     mn = para['slope_pos']
