@@ -1,93 +1,111 @@
-# Hess Ems
+# HESS EMS
 
+A project that implements various energy management strategies (EMS) for
+hybrid energy storage systems (HESS), featuring a framework for simulation and
+testing with several time series.
 
+## Associated Work
 
-## Getting started
+The accompanying paper detailing hess-ems is forthcoming. This project's
+simulation and test framework utilizes work from:
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+https://github.com/s-guenther/estss \
+https://github.com/s-guenther/hybrid 
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Be aware that there are no explicit dependencies to these projects. The used
+data from the first `estss` package is copied into this one and the data
+generated from the second `hybrid` package is manually generated and also stored
+within this project. I.e., reproducing the published results is possible without
+dependency on these packages. Further, the introduced ems can be used without
+dependency on these packages and testing and visualizing other time series
+without dependency on the `hybrid` package is also possible. 
 
-## Add your files
+Note that explicit dependencies on these projects are absent. Data from `estss`
+is included in this project, and manually generated `hybrid` data is also stored
+here, allowing for result reproduction without dependencies. The EMS introduced
+can be operated independently, and testing and visualizing other time series
+without `hybrid` is feasible.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Overview
 
-```
-cd existing_repo
-git remote add origin https://gitlab.projekt.uni-hannover.de/ifes-hess-control/hess-ems.git
-git branch -M main
-git push -uf origin main
-```
+Implemented hess-ems, each in a separate file, include:
 
-## Integrate with your tools
+- __deadzone__ ems in `deadzone.py`
+- __filter__ ems in `filter.py`
+- __fuzzy__ ems in `fuzzy.py`
+- __model predictive ems__ in `mpc.py`
+- __neural network__ ems in `neural.py`
 
-- [ ] [Set up project integrations](https://gitlab.projekt.uni-hannover.de/ifes-hess-control/hess-ems/-/settings/integrations)
+Additionally, the project contains:
 
-## Collaborate with your team
+- `simulate.py` for simulating specific storage settings with specific hess-ems
+- `reference.py` for data export and import to/from hybrid
+- `timeseries.py` for data retrieval from estss
+- `visualize.py` for standardized simulation results visualization
+- `mockup.py` providing mockups for unimplemented features
+- `experiment.py` for creating published results and additional showcases
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+## Requirements
 
-## Test and Deploy
+- Python `3.10` or newer
 
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Install manually by cloning the repository, entering it, and running `setup.py`:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+```shell
+    git clone https://github.com/s-guenther/hessems
+    cd hessems
+    python3 setup.py install
+```
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Alternatively, install via `pip`:
+
+```shell
+    pip install hess-ems
+```
+
+
+## Getting Started
+
+_tdb_
+
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Contributions are welcome! Please feel free to create issues or submit pull
+requests for improvement suggestions or code contributions.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Licensed under GPL-3.0-only. This program is free software and can be
+redistributed and/or modified under the terms of the GNU General Public License
+as published by the Free Software Foundation, version 3. It comes without any
+warranty, including the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the [GNU General Public License](LICENSE) for details.
+
+Commercial usage under GPLv3 is allowed without royalties or further
+implications. However, discussions regarding potential cooperations are
+appreciated.
+
+
+## Author
+
+HESS EMS - hybrid energy storage system energy management strategies
+Copyright (C) 2024\
+Sebastian Günther\
+sebastian.guenther@ifes.uni-hannover.de
+
+Leibniz Universität Hannover\
+Institut für Elektrische Energiesysteme\
+Fachgebiet für Elektrische Energiespeichersysteme
+
+Leibniz University Hannover\
+Institute of Electric Power Systems\
+Electric Energy Storage Systems Section
+
+https://www.ifes.uni-hannover.de/ees.html
+
+
