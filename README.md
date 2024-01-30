@@ -33,7 +33,7 @@ Implemented hess-ems, each in a separate file, include:
 - __deadzone__ ems in `deadzone.py`
 - __filter__ ems in `filter.py`
 - __fuzzy__ ems in `fuzzy.py`
-- __model predictive ems__ in `mpc.py`
+- __model predictive__ ems in `mpc.py`
 - __neural network__ ems in `neural.py`
 
 Additionally, the project contains:
@@ -47,12 +47,13 @@ Additionally, the project contains:
 
 ## Requirements
 
-- Python `3.10` or newer
+- Python `3.11` or newer. Might work with older versions.
 
 
 ## Installation
 
-Install manually by cloning the repository, entering it, and running `setup.py`:
+Install manually by cloning the repository, entering it, and running
+`setup.py`:
 
 ```shell
     git clone https://github.com/s-guenther/hessems
@@ -93,7 +94,7 @@ appreciated.
 
 ## Author
 
-HESS EMS - hybrid energy storage system energy management strategies
+HESS EMS - hybrid energy storage system energy management strategies\
 Copyright (C) 2024\
 Sebastian Günther\
 sebastian.guenther@ifes.uni-hannover.de
