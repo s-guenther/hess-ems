@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hessems"
+version = "0.1"
+description = """\
+Implementation of various representative energy management strategies (EMS) \
+for hybrid energy storage systems (HESS)\
+"""
+authors = [{name = "Sebastian Günther", email = "sebastian.guenther@ifes.uni-hannover.de"}]
+license = {file = "LICENSE"}
+readme = "README.md"
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPL-3.0-only)"
+]
+dependencies = [
+    "numpy"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/s-guenther/hessems"
+"Repository" = "https://github.com/s-guenther/hessems"

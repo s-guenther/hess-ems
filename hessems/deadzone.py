@@ -28,18 +28,18 @@ Internal functions:
 
 import numpy as np
 
-from util import update_std, subdict
+from hessems.util import update_std, subdict
 
 
 # Standard Parameters needed for the Deadzone HESS-EMS
 STD_PARA = {
     'slope_pos': 1,
     'slope_neg': 1,
-    'out_max': 1,
-    'out_min': -1,
+    'out_max': 0.5,
+    'out_min': -0.5,
     'threshold_pos': 0.5,
     'threshold_neg': -0.5,
-    'gain': 1,
+    'gain': 1e-1,
     'window_up': 0.7,
     'window_low': 0.3,
     'base_max': 0.5,

@@ -20,7 +20,7 @@ Details on the parameterization of this EMS can be found in the variables
 
 import numpy as np
 
-from util import update_std
+from hessems.util import update_std
 
 
 # Standard Parameters needed for the Filter/Lowpass HESS-EMS

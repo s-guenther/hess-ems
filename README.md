@@ -55,24 +55,20 @@ Additionally, the project contains:
 
 ## Requirements
 
-- Python `3.11` or newer. Might work with older versions.
+Developed with Python `3.11`. Should work with way older versions and 
+newer versions as well
 
 
 ## Installation
 
-Install manually by cloning the repository, entering it, and running
-`setup.py`:
+Install manually by cloning the repository, entering it, and build and 
+install via the `pyproject.toml`:
 
 ```shell
     git clone https://github.com/s-guenther/hessems
     cd hessems
-    python3 setup.py install
-```
-
-Alternatively, install via `pip`:
-
-```shell
-    pip install hess-ems
+    python3 -m build
+    pip install .
 ```
 
 
