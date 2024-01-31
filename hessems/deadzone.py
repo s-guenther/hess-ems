@@ -2,7 +2,7 @@
 """
 Deadzone EMS Module
 
-This module implements a Deadzone Energy Management System (EMS) for hybrid
+This module implements a Deadzone Energy Management Strategy (EMS) for hybrid
 energy storage systems. It offers various operational modes for peak and base
 power management with adjustable parameters for system optimization.
 
@@ -74,7 +74,7 @@ STD_PARA_DESCRIPTIONS = {
 
 def deadzone(power_in, energy_peak, para=None):
     """
-    Deadzone Energy Management System (EMS).
+    Deadzone Energy Management Strategy (EMS).
 
     Depending on chosen parameterization, this Deadzone EMS offers various 
     operational modes including peak-prioritized, base-prioritized, and a
@@ -96,6 +96,7 @@ def deadzone(power_in, energy_peak, para=None):
         Parameters for EMS operation. Defaults are filled from `STD_PARA`.
         A description of the possible keys can be found in 
         `STD_PARA_DESCRIPTIONS`.
+
     Returns
     -------
     tuple

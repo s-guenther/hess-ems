@@ -31,10 +31,18 @@ without `hybrid` is feasible.
 Implemented hess-ems, each in a separate file, include:
 
 - __deadzone__ ems in `deadzone.py`
-- __filter__ ems in `filter.py`
+- __lowpass__ ems in `lowpass.py` <sup>(*1)</sup>
 - __fuzzy__ ems in `fuzzy.py`
 - __model predictive__ ems in `mpc.py`
 - __neural network__ ems in `neural.py`
+
+<sub>
+(*1) The original ems name in the publication is `filter`, which is also 
+more in line with the rest of the literature. However, this name would 
+shadow the respective
+[https://docs.python.org/3/library/functions.html#filter](python builtin function)
+and we therefore chose to rename it to `lowpass` in this project.
+</sub>
 
 Additionally, the project contains:
 
