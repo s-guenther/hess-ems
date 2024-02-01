@@ -1,30 +1,19 @@
-# HESS EMS
+# HESS-EMS
 
-A project that implements various energy management strategies (EMS) for
-hybrid energy storage systems (HESS), featuring a framework for simulation and
-testing with several time series.
+A project that implements various representative energy management strategies 
+(EMS) for hybrid energy storage systems (HESS)
 
 ## Associated Work
 
-The accompanying paper detailing hess-ems is forthcoming. This project's
-simulation and test framework utilizes work from:
+The accompanying paper detailing HESS-EMS is forthcoming.
 
-https://github.com/s-guenther/estss \
-https://github.com/s-guenther/hybrid 
+To streamline this project and minimize dependencies, a dedicated simulation
+and testing framework for these EMS strategies has been established in a 
+separate project, available at
+[HESS-EMS-SIM](https://github.com/s-guenther/hessemssim).
+This repository also hosts the code for generating the plots featured in the
+forthcoming paper.
 
-Be aware that there are no explicit dependencies to these projects. The used
-data from the first `estss` package is copied into this one and the data
-generated from the second `hybrid` package is manually generated and also stored
-within this project. I.e., reproducing the published results is possible without
-dependency on these packages. Further, the introduced ems can be used without
-dependency on these packages and testing and visualizing other time series
-without dependency on the `hybrid` package is also possible. 
-
-Note that explicit dependencies on these projects are absent. Data from `estss`
-is included in this project, and manually generated `hybrid` data is also stored
-here, allowing for result reproduction without dependencies. The EMS introduced
-can be operated independently, and testing and visualizing other time series
-without `hybrid` is feasible.
 
 ## Overview
 
@@ -37,26 +26,20 @@ Implemented hess-ems, each in a separate file, include:
 - __neural network__ ems in `neural.py`
 
 <sub>
-(*1) The original ems name in the publication is `filter`, which is also 
+(*1) The original EMS name in the publication is `filter`, which is also 
 more in line with the rest of the literature. However, this name would 
 shadow the respective
 [https://docs.python.org/3/library/functions.html#filter](python builtin function)
 and we therefore chose to rename it to `lowpass` in this project.
 </sub>
 
-Additionally, the project contains:
+See the source code documentation for further information.
 
-- `simulate.py` for simulating specific storage settings with specific hess-ems
-- `reference.py` for data export and import to/from hybrid
-- `timeseries.py` for data retrieval from estss
-- `visualize.py` for standardized simulation results visualization
-- `mockup.py` providing mockups for unimplemented features
-- `experiment.py` for creating published results and additional showcases
 
 ## Requirements
 
-Developed with Python `3.11`. Should work with way older versions and 
-newer versions as well
+Developed with Python `3.11`. Should work with way older versions since
+`3.6` (f-strings) as well.
 
 
 ## Installation
