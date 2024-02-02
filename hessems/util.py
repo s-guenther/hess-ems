@@ -24,7 +24,7 @@ def update_std(new, std):
 
     # Update the std dict with the new values
     updated = copy(std)
-    for key, val in new:
+    for key, val in new.items():
         updated[key] = val
     return updated
 

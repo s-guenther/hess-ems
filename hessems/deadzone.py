@@ -192,9 +192,9 @@ def _feedback(val_in, para):
     low = para['window_low']
 
     diff = ((val_in - low) * (val_in <= low) +
-            0              * (low < val_in < up) +  # noqa
+            0              * ((low < val_in) & (val_in < up)) +  # noqa
             (val_in - up)  * (val_in >= up))  # noqa
-    return k*diff
+    return -k*diff
 
 
 def _reserve(base_in, peak_in, para):
@@ -227,8 +227,8 @@ def _reserve(base_in, peak_in, para):
     peak_max = para['peak_max']
     peak_min = para['peak_min']
 
+    low = np.maximum(peak_min - peak_in, base_in - base_max)
     high = np.minimum(peak_max - peak_in, base_in - base_min)
-    low = np.minimum(peak_min - peak_in, base_in - base_max)
     return low, high
 
 
@@ -255,11 +255,11 @@ def _saturation(s_in, para):
         The processed signal after applying the saturation operation, with
         values exceeding the limits capped at 'sat_high' or 'sat_low'.
     """
-    pos = para['sat_low']
-    neg = para['sat_high']
+    neg = para['sat_low']
+    pos = para['sat_high']
 
     s_out = (pos * (s_in >= pos) +
-             s_in * (neg < s_in < pos) +
+             s_in * ((neg < s_in) & (s_in < pos)) +
              neg * (s_in <= neg))
     return s_out
 
@@ -288,12 +288,12 @@ def _deadzone(d_in, para):
         the specified threshold range set to zero, and values above shifted by
         the threshold range.
     """
-    mp = para['slope_neg']
-    mn = para['slope_pos']
-    tp = para['threshold_pos']
+    mn = para['slope_neg']
+    mp = para['slope_pos']
     tn = para['threshold_neg']
+    tp = para['threshold_pos']
 
     d_out = (mp*(d_in - tp) * (d_in > tp) +
-             0              * (tn <= d_in <= tp) +  # noqa
+             0              * ((tn <= d_in) & (d_in <= tp)) +  # noqa
              mn*(d_in - tn) * (d_in < tn))
     return d_out

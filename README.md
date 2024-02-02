@@ -3,6 +3,8 @@
 A project that implements various representative energy management strategies 
 (EMS) for hybrid energy storage systems (HESS)
 
+---
+
 ## Associated Work
 
 The accompanying paper detailing HESS-EMS is forthcoming.
@@ -32,6 +34,12 @@ shadow the respective
 [https://docs.python.org/3/library/functions.html#filter](python builtin function)
 and we therefore chose to rename it to `lowpass` in this project.
 </sub>
+<br /><br />
+
+The `examples/` folder contains simple visualizations and test cases of the 
+implemented EMS. (These test cases can also be interpreted as simple,
+nonautomated function tests)
+
 
 See the source code documentation for further information.
 
