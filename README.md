@@ -25,7 +25,6 @@ Implemented hess-ems, each in a separate file, include:
 - __lowpass__ ems in `lowpass.py` <sup>(*1)</sup>
 - __fuzzy__ ems in `fuzzy.py`
 - __model predictive__ ems in `mpc.py`
-- __neural network__ ems in `neural.py`
 
 <sub>
 (*1) The original EMS name in the publication is `filter`, which is also 

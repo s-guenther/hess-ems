@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Deadzone EMS Module
+Deadzone-based EMS Module
 
 This module implements a Deadzone Energy Management Strategy (EMS) for hybrid
 energy storage systems. It offers various operational modes for peak and base
@@ -99,8 +99,18 @@ def deadzone(power_in, energy_peak, para=None):
 
     Returns
     -------
-    tuple
-        A tuple containing the adjusted base and peak power values.
+    base : float or numpy.array
+        Power dispatched to base storage.
+    peak : float or numpy.array
+        Power dispatched to peak storage.
+    base_pre : floa or numpy.array
+        Internal base power before energy feedback adjustment
+    peak_pre : floa or numpy.array
+        Internal peak power before energy feedback adjustment
+    feedback : floa or numpy.array
+        Dynamically saturated feedback that is added to the *_pre outputs
+    feedback_pre : floa or numpy.array
+        Unsaturated feedback calculated from the feedback logic
     """
     # Load missing std para
     para = update_std(para, STD_PARA)
@@ -128,7 +138,7 @@ def deadzone(power_in, energy_peak, para=None):
     peak = peak_pre + feedback
     base = base_pre - feedback
 
-    return base, peak
+    return base, peak, base_pre, peak_pre, feedback, feedback_pre
 
 
 def _sat_deadzone(val_in, para):

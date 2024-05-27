@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Lowpass/Filter EMS Module
+Lowpass/Filter-based EMS Module
 
 This module defines a Lowpass/Filter Energy Management Strategy (EMS)
 utilizing a first-order lowpass filter combined with proportional energy
@@ -73,6 +73,8 @@ def lowpass(power_in, dtime, last_filt, energy_peak, para=None):
         Power dispatched to peak storage.
     filt : float
         Current internal integrator value of the lowpass filter.
+    feedback : float
+        Current soc feedback value
         
     Note
     ----
@@ -103,4 +105,4 @@ def lowpass(power_in, dtime, last_filt, energy_peak, para=None):
     # write output
     base = filt + feedback
     peak = pin - base
-    return base, peak, filt
+    return base, peak, filt, feedback
