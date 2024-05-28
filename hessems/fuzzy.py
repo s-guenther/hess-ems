@@ -30,6 +30,7 @@ import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 
+from hessems.util import update_std
 
 # STD MEMBERSHIP FUNCTION DEFINITION FOR INPUT is a dict of dicts holding
 # vectors/number lists. keys of the outer dict hold the names of the
@@ -79,6 +80,99 @@ STD_RULES = np.array([
 ])
 
 
+# STD PARAMETER DEFINITION as an alternative to to mf_in and mf_out
+STD_PARA = dict(
+    # Membership function support points for input1 `pin`
+    in1_a_u=STD_MF_IN_DEF['pin']['high out'][2],
+    in1_a_r=STD_MF_IN_DEF['pin']['high out'][3],
+    in1_b_l=STD_MF_IN_DEF['pin']['low out'][0],
+    in1_b_u=STD_MF_IN_DEF['pin']['low out'][1],
+    in1_b_r=STD_MF_IN_DEF['pin']['low out'][2],
+    in1_c_l=STD_MF_IN_DEF['pin']['no flow'][0],
+    in1_c_u=STD_MF_IN_DEF['pin']['no flow'][1],
+    in1_c_r=STD_MF_IN_DEF['pin']['no flow'][2],
+    in1_d_l=STD_MF_IN_DEF['pin']['low in'][0],
+    in1_d_u=STD_MF_IN_DEF['pin']['low in'][1],
+    in1_d_r=STD_MF_IN_DEF['pin']['low in'][2],
+    in1_e_l=STD_MF_IN_DEF['pin']['high in'][0],
+    in1_e_u=STD_MF_IN_DEF['pin']['high in'][1],
+    # Membership function support points for input2 `epeak`
+    in2_a_u=STD_MF_IN_DEF['epeak']['very low'][2],
+    in2_a_r=STD_MF_IN_DEF['epeak']['very low'][3],
+    in2_b_l=STD_MF_IN_DEF['epeak']['low'][0],
+    in2_b_u=STD_MF_IN_DEF['epeak']['low'][1],
+    in2_b_r=STD_MF_IN_DEF['epeak']['low'][2],
+    in2_c_l=STD_MF_IN_DEF['epeak']['good'][0],
+    in2_c_u=STD_MF_IN_DEF['epeak']['good'][1],
+    in2_c_r=STD_MF_IN_DEF['epeak']['good'][2],
+    in2_d_l=STD_MF_IN_DEF['epeak']['high'][0],
+    in2_d_u=STD_MF_IN_DEF['epeak']['high'][1],
+    in2_d_r=STD_MF_IN_DEF['epeak']['high'][2],
+    in2_e_l=STD_MF_IN_DEF['epeak']['very high'][0],
+    in2_e_u=STD_MF_IN_DEF['epeak']['very high'][1],
+    # Membership function support points for output `pbase`
+    out_a_u=STD_MF_OUT_DEF['pbase']['high discharge'][2],
+    out_a_r=STD_MF_OUT_DEF['pbase']['high discharge'][3],
+    out_b_l=STD_MF_OUT_DEF['pbase']['low discharge'][0],
+    out_b_u=STD_MF_OUT_DEF['pbase']['low discharge'][1],
+    out_b_r=STD_MF_OUT_DEF['pbase']['low discharge'][2],
+    out_c_l=STD_MF_OUT_DEF['pbase']['no flow'][0],
+    out_c_u=STD_MF_OUT_DEF['pbase']['no flow'][1],
+    out_c_r=STD_MF_OUT_DEF['pbase']['no flow'][2],
+    out_d_l=STD_MF_OUT_DEF['pbase']['low recharge'][0],
+    out_d_u=STD_MF_OUT_DEF['pbase']['low recharge'][1],
+    out_d_r=STD_MF_OUT_DEF['pbase']['low recharge'][2],
+    out_e_l=STD_MF_OUT_DEF['pbase']['high recharge'][0],
+    out_e_u=STD_MF_OUT_DEF['pbase']['high recharge'][1],
+)
+
+
+STD_PARA_DESCRIPTIONS = dict(
+    # Membership function support points for input1 `pin`
+    in1_a_u="STD_MF_IN_DEF['pin']['high out'][2]",
+    in1_a_r="STD_MF_IN_DEF['pin']['high out'][3]",
+    in1_b_l="STD_MF_IN_DEF['pin']['low out'][0]",
+    in1_b_u="STD_MF_IN_DEF['pin']['low out'][1]",
+    in1_b_r="STD_MF_IN_DEF['pin']['low out'][2]",
+    in1_c_l="STD_MF_IN_DEF['pin']['no flow'][0]",
+    in1_c_u="STD_MF_IN_DEF['pin']['no flow'][1]",
+    in1_c_r="STD_MF_IN_DEF['pin']['no flow'][2]",
+    in1_d_l="STD_MF_IN_DEF['pin']['low in'][0]",
+    in1_d_u="STD_MF_IN_DEF['pin']['low in'][1]",
+    in1_d_r="STD_MF_IN_DEF['pin']['low in'][2]",
+    in1_e_l="STD_MF_IN_DEF['pin']['high in'][0]",
+    in1_e_u="STD_MF_IN_DEF['pin']['high in'][1]",
+    # Membership function support points for input2 `epeak`
+    in2_a_u="STD_MF_IN_DEF['epeak']['very low'][2]",
+    in2_a_r="STD_MF_IN_DEF['epeak']['very low'][3]",
+    in2_b_l="STD_MF_IN_DEF['epeak']['low'][0]",
+    in2_b_u="STD_MF_IN_DEF['epeak']['low'][1]",
+    in2_b_r="STD_MF_IN_DEF['epeak']['low'][2]",
+    in2_c_l="STD_MF_IN_DEF['epeak']['good'][0]",
+    in2_c_u="STD_MF_IN_DEF['epeak']['good'][1]",
+    in2_c_r="STD_MF_IN_DEF['epeak']['good'][2]",
+    in2_d_l="STD_MF_IN_DEF['epeak']['high'][0]",
+    in2_d_u="STD_MF_IN_DEF['epeak']['high'][1]",
+    in2_d_r="STD_MF_IN_DEF['epeak']['high'][2]",
+    in2_e_l="STD_MF_IN_DEF['epeak']['very high'][0]",
+    in2_e_u="STD_MF_IN_DEF['epeak']['very high'][1]",
+    # Membership function support points for output `pbase`
+    out_a_u="STD_MF_OUT_DEF['pbase']['high discharge'][2]",
+    out_a_r="STD_MF_OUT_DEF['pbase']['high discharge'][3]",
+    out_b_l="STD_MF_OUT_DEF['pbase']['low discharge'][0]",
+    out_b_u="STD_MF_OUT_DEF['pbase']['low discharge'][1]",
+    out_b_r="STD_MF_OUT_DEF['pbase']['low discharge'][2]",
+    out_c_l="STD_MF_OUT_DEF['pbase']['no flow'][0]",
+    out_c_u="STD_MF_OUT_DEF['pbase']['no flow'][1]",
+    out_c_r="STD_MF_OUT_DEF['pbase']['no flow'][2]",
+    out_d_l="STD_MF_OUT_DEF['pbase']['low recharge'][0]",
+    out_d_u="STD_MF_OUT_DEF['pbase']['low recharge'][1]",
+    out_d_r="STD_MF_OUT_DEF['pbase']['low recharge'][2]",
+    out_e_l="STD_MF_OUT_DEF['pbase']['high recharge'][0]",
+    out_e_u="STD_MF_OUT_DEF['pbase']['high recharge'][1]",
+)
+
+
 # Function that generates the controller
 
 def build_controller(mf_in=None, mf_out=None, ruleset=None):
@@ -100,6 +194,10 @@ def build_controller(mf_in=None, mf_out=None, ruleset=None):
     ruleset : numpy array of strings, optional
         nxm array, where n is the number of MFs of input one and m of input
         two. Default: STD_RULES
+
+    Returns
+    -------
+    Controller object of type skfuzzy.ctrl.ControlSystemSimulations
     """
     if mf_in is None:
         mf_in = STD_MF_IN_DEF
@@ -170,6 +268,59 @@ def _get_minmax_from_mfvals(mfval_list_of_lists):
     return [minval, maxval]
 
 
+def build_controller_with_serialized_para(para=None, ruleset=None):
+    """Generates a fuzzy controller object that can perform calculations (of
+    type `skfuzzy.ctrl.ControlSystemSimulation`).
+
+    It returns the same controller as `build_controller()` but accepts the
+    Membership Function Definition as a serialized dict with scalar values,
+    instead of multiple dicts of dicts with number arrays. See STD_PARA and
+    STD_PARA_DESCRIPTIONS for further information.
+
+    If the para dict is not complete, the missing entries will be filled
+    with Standard values from STD_PARA
+
+    Parameters
+    ----------
+    para : dict scalar values, optional
+        See STD_PARA and STD_PARA_DESCRIPTIONS for definition
+    ruleset : numpy array of strings, optional
+        nxm array, where n is the number of MFs of input one and m of input
+        two. Default: STD_RULES
+
+    Returns
+    -------
+    Controller object of type skfuzzy.ctrl.ControlSystemSimulation
+    """
+    para = update_std(para, STD_PARA)
+    mf_in = {
+        'pin': {
+            'high in': [para['in1_e_l'], para['in1_e_u'],  1, 1],
+            'low in': [para['in1_d_l'], para['in1_d_u'], para['in1_d_r']],
+            'no flow': [para['in1_c_l'], para['in1_c_u'], para['in1_c_r']],
+            'low out': [para['in1_b_l'], para['in1_b_u'], para['in1_b_r']],
+            'high out': [-1, -1, para['in1_a_u'], para['in1_a_r']],
+        },
+        'epeak': {
+            'very low': [0, 0, para['in2_a_u'], para['in2_a_r']],
+            'low': [para['in2_b_l'], para['in2_b_u'], para['in2_b_r']],
+            'good': [para['in2_c_l'], para['in2_c_u'], para['in2_c_r']],
+            'high': [para['in2_d_l'], para['in2_d_u'], para['in2_d_r']],
+            'very high': [para['in2_e_l'], para['in2_e_u'],  1, 1],
+        }
+    }
+    mf_out = {
+        'pbase': {
+            'high discharge': [-1, -1, para['out_a_u'], para['out_a_r']],
+            'low discharge': [para['out_b_l'], para['out_b_u'], para['out_b_r']],
+            'no flow': [para['out_c_l'], para['out_c_u'], para['out_c_r']],
+            'low recharge': [para['out_d_l'], para['out_d_u'], para['out_d_r']],
+            'high recharge': [para['out_e_l'], para['out_e_u'],  1, 1],
+        }
+    }
+    return build_controller(mf_in, mf_out, ruleset)
+
+
 # Function that evaluates the control inputs with a specified controller
 
 def fuzzy(power_in, energy_peak, controller=build_controller()):
@@ -184,8 +335,8 @@ def fuzzy(power_in, energy_peak, controller=build_controller()):
     The ruleset is fixed, as well as the aggregation method (bounded sum),
     implication method (min), and defuzzification method (center of gravity).
 
-    Default parameters are used if `para` is not provided or incomplete, as
-    defined in `STD_PARA` and described in `STD_PARA_DESCRIPTIONS`.
+    Default controller is used if `controller` is not provided,
+    see `build_controller()` for more information.
 
     Parameters
     ----------
