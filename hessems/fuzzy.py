@@ -7,23 +7,37 @@ for hybrid energy storage systems.
 
 Main method/EMS implementation:
 
-fuzzy(power_in, energy_peak, para=None)
+    fuzzy(power_in, energy_peak, controller=build_controller())
+        That performs the calcuations for the respective input with the
+        respective controller and returns the powers for base and peak storage
+    build_controller(mf_in=None, mf_out=None, ruleset=None):
+        That generates a fuzzy controller object that can be used for
+        calculation based on the definition of the input and output
+        membership functions as well as a ruleset. Std parameters are used
+        if these are not provided. See below variables for more information
 
 Details on the parameterization of this EMS can be found in the variables
-    `STD_PARA` and
-    `STD_PARA_DESCRIPTIONS`.
 
-Internal functions:
+    `STD_MF_IN_DEF`
+        Input membership functions definition
+    `STD_MF_OUT_DEF`
+        Output membership functions definition
+    `STD_RULES`
+        Ruleset Matrix definition
 """
 
 import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 
-from hessems.util import update_std, subdict
 
-
-
+# STD MEMBERSHIP FUNCTION DEFINITION FOR INPUT is a dict of dicts holding
+# vectors/number lists. keys of the outer dict hold the names of the
+# variables (which are `pin` and `epeak` in the fuzzy-logic-ems context).
+# The keys of the inner dict hold the name of the respective membership
+# functions and the values are either a 3-element array, holding the support
+# points for a triangular MF, or 4-element array, holding the support points
+# for a trapezoidal MF.
 STD_MF_IN_DEF = {
     'pin': {
         'high in': [0.4, 0.8, 1, 1],
@@ -42,6 +56,8 @@ STD_MF_IN_DEF = {
 }
 
 
+# STD MEMBERSHIP FUNCTION DEFINITION FOR OUTPUT is structured in the same
+# way as `STD_MF_IN_DEF`. There is only one output variable `pbase`.
 STD_MF_OUT_DEF = {
     'pbase': {
         'high discharge': [-1, -1, -0.8, -0.4],
@@ -52,7 +68,8 @@ STD_MF_OUT_DEF = {
     }
 }
 
-
+# STD RULESET MATRIX that assigns input `pin` (rows) and `epeak` (columns)
+# the the output `pbase` (matrix elements)
 STD_RULES = np.array([
     ['no flow',         'low recharge',     'high recharge',  'high recharge',  'high recharge'],
     ['low discharge',   'no flow',          'low recharge',   'high recharge',  'high recharge'],
@@ -65,6 +82,25 @@ STD_RULES = np.array([
 # Function that generates the controller
 
 def build_controller(mf_in=None, mf_out=None, ruleset=None):
+    """Generates a fuzzy controller object that can perform calculations (of
+    type `skfuzzy.ctrl.ControlSystemSimulation`).
+
+    It uses structered dict of dicts to define the membership functions (MFs),
+    inputs and outputs. See STD_MF_IN_DEF, STD_MF_OUT_DEF and STD_RULES for
+    further information.
+
+    Parameters
+    ----------
+    mf_in : dict of dicts holding 3- or 4-element number-arrays, optional
+        Defines names of input variable, names of MFs and MF support points,
+        Default: STD_MF_IN_DEF
+    mf_out : dict of dicts holding 3- or 4-element number-arrays, optional
+        Defines names of output variable, names of MFs and MF support points
+        Default: STD_MF_OUT_DEF
+    ruleset : numpy array of strings, optional
+        nxm array, where n is the number of MFs of input one and m of input
+        two. Default: STD_RULES
+    """
     if mf_in is None:
         mf_in = STD_MF_IN_DEF
     if mf_out is None:
@@ -127,6 +163,8 @@ def build_controller(mf_in=None, mf_out=None, ruleset=None):
 
 
 def _get_minmax_from_mfvals(mfval_list_of_lists):
+    """Crawls a list of lists holding numbers and determines the minimum or
+    maximum value, respectively"""
     minval = np.min([np.min(vec) for vec in mfval_list_of_lists])
     maxval = np.max([np.max(vec) for vec in mfval_list_of_lists])
     return [minval, maxval]
@@ -173,8 +211,3 @@ def fuzzy(power_in, energy_peak, controller=build_controller()):
     peak = power_in - base
 
     return base, peak
-
-
-if __name__ == '__main__':
-    con = build_controller()
-    dummy_breakpoint = True
