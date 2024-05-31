@@ -103,13 +103,13 @@ def deadzone(power_in, energy_peak, para=None):
         Power dispatched to base storage.
     peak : float or numpy.array
         Power dispatched to peak storage.
-    base_pre : floa or numpy.array
+    base_pre : float or numpy.array
         Internal base power before energy feedback adjustment
-    peak_pre : floa or numpy.array
+    peak_pre : float or numpy.array
         Internal peak power before energy feedback adjustment
-    feedback : floa or numpy.array
+    feedback : float or numpy.array
         Dynamically saturated feedback that is added to the *_pre outputs
-    feedback_pre : floa or numpy.array
+    feedback_pre : float or numpy.array
         Unsaturated feedback calculated from the feedback logic
     """
     # Load missing std para
