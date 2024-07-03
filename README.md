@@ -12,7 +12,7 @@ The accompanying paper detailing HESS-EMS is forthcoming.
 To streamline this project and minimize dependencies, a dedicated simulation
 and testing framework for these EMS strategies has been established in a 
 separate project, available at
-[HESS-EMS-SIM](https://github.com/s-guenther/hessemssim).
+[HESS-EMS-SIM](https://github.com/s-guenther/hess-sim).
 This repository also hosts the code for generating the plots featured in the
 forthcoming paper.
 
