@@ -101,6 +101,6 @@ Leibniz University Hannover\
 Institute of Electric Power Systems\
 Electric Energy Storage Systems Section
 
-https://www.ifes.uni-hannover.de/ees.html
+https://www.ifes.uni-hannover.de/en/ees.html
 
 
